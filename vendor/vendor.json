@@ -27,6 +27,12 @@
 			"revisionTime": "2017-05-14T06:33:48Z"
 		},
 		{
+			"checksumSHA1": "hPtLCE2BnQH6WikX080uoi+8tVQ=",
+			"path": "golang.org/x/image/font/inconsolata",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
 			"checksumSHA1": "OgJ2EEw9LVvvaJbwI1/zzaHt9pk=",
 			"path": "golang.org/x/image/font/plan9font",
 			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
