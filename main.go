@@ -10,6 +10,8 @@ import (
 
 	"bytes"
 
+	"path/filepath"
+
 	"github.com/CirrusMD/badger/internal"
 	"github.com/nfnt/resize"
 	"golang.org/x/image/font/basicfont"
@@ -25,6 +27,8 @@ var (
 	beta  bool
 	alpha bool
 	dark  bool
+
+	assetPath string
 )
 
 func init() {
@@ -36,6 +40,8 @@ func init() {
 	flag.BoolVar(&beta, "beta", false, "Show beta label image in lower right corner")
 	flag.BoolVar(&alpha, "alpha", false, "Show alpha label image in lower right corner")
 	flag.BoolVar(&dark, "dark", false, "Show dark beta/alpha image in lower right corner. Default is a light image.")
+
+	flag.StringVar(&assetPath, "path", ".", "Path to your icon files")
 }
 
 func main() {
@@ -46,15 +52,29 @@ func main() {
 		return
 	}
 
-	img, err := gg.LoadImage("/users/david/desktop/icon-180.png")
-	exitIf("could not open file", err)
-	parent := gg.NewContextForImage(img)
-	drawMarketingVersion(parent)
-	drawBuildNumber(parent)
-	overlayBadgeImage(parent)
+	for _, imgPath := range findImages() {
+		img, err := gg.LoadImage(imgPath)
+		exitIf("could not open file", err)
+		parent := gg.NewContextForImage(img)
+		drawMarketingVersion(parent)
+		drawBuildNumber(parent)
+		overlayBadgeImage(parent)
 
-	err = gg.SavePNG("/users/david/desktop/icon-transformed.png", parent.Image())
-	exitIf("could not save png", err)
+		err = gg.SavePNG(imgPath, parent.Image())
+		exitIf("could not save png", err)
+	}
+}
+
+func findImages() []string {
+	path := filepath.Join(assetPath, "*.png")
+	path = filepath.Clean(path)
+	images, err := filepath.Glob(path)
+	exitIf("could not find images", err)
+	if len(images) == 0 {
+		log.Fatalf(`could not find any PNGs in path "%s"`, path)
+	}
+
+	return images
 }
 
 func drawMarketingVersion(parent *gg.Context) {
