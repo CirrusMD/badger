@@ -53,6 +53,7 @@ func main() {
 	}
 
 	for _, imgPath := range findImages() {
+		log.Printf("Badging %s...", imgPath)
 		img, err := gg.LoadImage(imgPath)
 		exitIf("could not open file", err)
 		parent := gg.NewContextForImage(img)
