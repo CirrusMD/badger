@@ -14,7 +14,7 @@ To see a list of command line options run `badger -h` or `badger -help`
 
 ## Installation
 
-(Recommended): Download the latest release for your OS from the Releases page.
+(Recommended): Download the latest release for your OS from [Releases](https://github.com/CirrusMD/badger/releases)
 
 
 From source:
