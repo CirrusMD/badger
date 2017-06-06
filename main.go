@@ -8,8 +8,11 @@ import (
 	"flag"
 	"strings"
 
+	"bytes"
+
+	"github.com/CirrusMD/badger/internal"
+	"github.com/nfnt/resize"
 	"golang.org/x/image/font/basicfont"
-	"golang.org/x/image/font/inconsolata"
 	gg "gopkg.in/fogleman/gg.v1"
 )
 
@@ -18,6 +21,10 @@ const Version = "0.1.0"
 var (
 	mversion string
 	buildNum string
+
+	beta  bool
+	alpha bool
+	dark  bool
 )
 
 func init() {
@@ -25,6 +32,10 @@ func init() {
 
 	flag.StringVar(&mversion, "mversion", "", "Marketing version (ex: 1.3.4)")
 	flag.StringVar(&buildNum, "b", "", "Build number")
+
+	flag.BoolVar(&beta, "beta", false, "Show beta label image in lower right corner")
+	flag.BoolVar(&alpha, "alpha", false, "Show alpha label image in lower right corner")
+	flag.BoolVar(&dark, "dark", false, "Show dark beta/alpha image in lower right corner. Default is a light image.")
 }
 
 func main() {
@@ -37,11 +48,12 @@ func main() {
 
 	img, err := gg.LoadImage("/users/david/desktop/icon-180.png")
 	exitIf("could not open file", err)
-	dc := gg.NewContextForImage(img)
-	drawMarketingVersion(dc)
-	drawBuildNumber(dc)
+	parent := gg.NewContextForImage(img)
+	drawMarketingVersion(parent)
+	drawBuildNumber(parent)
+	overlayBadgeImage(parent)
 
-	err = gg.SavePNG("/users/david/desktop/icon-transformed.png", dc.Image())
+	err = gg.SavePNG("/users/david/desktop/icon-transformed.png", parent.Image())
 	exitIf("could not save png", err)
 }
 
@@ -77,19 +89,36 @@ func versionDimensions(dc *gg.Context) (int, int) {
 	return width, height
 }
 
-func betaContext(img image.Image) *gg.Context {
-	betaX := img.Bounds().Max.X
-	betaY := int(float64(img.Bounds().Max.Y)*0.2) - 1
-	dc := gg.NewContext(betaX, betaY)
-	dc.SetRGBA(0, 0, 0, 0.4)
-	dc.Clear()
+func overlayBadgeImage(parent *gg.Context) {
+	badge := findBadgeImage()
+	if badge == nil {
+		return
+	}
+	badge = resize.Resize(uint(parent.Width()), uint(parent.Height()), badge, resize.NearestNeighbor)
+	parent.DrawImage(badge, 0, 0)
+}
 
-	dc.SetFontFace(inconsolata.Bold8x16)
-	dc.SetRGB(1, 1, 1)
-	text := "BETA"
-	dc.DrawStringAnchored(text, float64(betaX/2), float64(betaY/2), 0.5, 0.5)
+func findBadgeImage() image.Image {
+	imgName := ""
+	if alpha && dark {
+		imgName = "alpha_badge_dark.png"
+	} else if alpha {
+		imgName = "alpha_badge_light.png"
+	} else if beta && dark {
+		imgName = "beta_badge_dark.png"
+	} else if beta {
+		imgName = "beta_badge_light.png"
+	}
+	if imgName == "" {
+		return nil
+	}
+	raw, err := internal.Asset("assets/" + imgName)
+	exitIf("could not load overlay image", err)
 
-	return dc
+	img, _, err := image.Decode(bytes.NewReader(raw))
+	exitIf("unable to decode overlay image", err)
+
+	return img
 }
 
 func exitIf(mssg string, err error) {
