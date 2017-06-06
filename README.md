@@ -23,3 +23,8 @@ go get github.com/CirrusMD/badger
 cd $GOPATH/github.com/CirrusMD/badger
 go build
 ```
+
+## TODO
+* Add to travis-ci
+* Automated releases via travis-ci
+* Add to homebrew to make CI Fastlane workflows easier. (At CirrusMD, our Fastlane scripts are currently only run on a developer's local machine.)
