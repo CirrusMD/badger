@@ -20,7 +20,7 @@ To see a list of command line options run `badger -h` or `badger -help`
 From source:
 ```
 go get github.com/CirrusMD/badger
-cd $GOPATH/github.com/CirrusMD/badger
+cd $GOPATH/src/github.com/CirrusMD/badger
 go build
 ```
 
