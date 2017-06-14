@@ -3,6 +3,12 @@
 	"ignore": "",
 	"package": [
 		{
+			"checksumSHA1": "j+7FNCvlU+kWXWywAGJK+lG2NmY=",
+			"path": "github.com/bmatcuk/doublestar",
+			"revision": "dd6a6f0a8cdfaaa88b08cf26cf1bc7d69003ee13",
+			"revisionTime": "2016-09-23T20:37:36Z"
+		},
+		{
 			"checksumSHA1": "aJ/kX/eCUlrCJBZ26Hwh/RXzAIw=",
 			"path": "github.com/golang/freetype/raster",
 			"revision": "bcfeb16b74e8aea9e2fe043406f2ef74b1cb0759",
@@ -55,6 +61,10 @@
 			"path": "gopkg.in/fogleman/gg.v1",
 			"revision": "6166aa3c1afaee416f384645a81636267aee6d25",
 			"revisionTime": "2016-12-21T00:30:13Z"
+		},
+		{
+			"path": "https://github.com/bmatcuk/doublestar",
+			"revision": ""
 		}
 	],
 	"rootPath": "github.com/CirrusMD/badger"
