@@ -16,6 +16,7 @@ import (
 	"github.com/nfnt/resize"
 	"golang.org/x/image/font/basicfont"
 	gg "gopkg.in/fogleman/gg.v1"
+	"github.com/bmatcuk/doublestar"
 )
 
 const Version = "0.1.1"
@@ -28,7 +29,7 @@ var (
 	alpha bool
 	dark  bool
 
-	assetPath string
+	globPattern string
 )
 
 func init() {
@@ -41,7 +42,7 @@ func init() {
 	flag.BoolVar(&alpha, "alpha", false, "Show alpha label image in lower right corner")
 	flag.BoolVar(&dark, "dark", false, "Show dark beta/alpha image in lower right corner. Default is a light image.")
 
-	flag.StringVar(&assetPath, "path", ".", "Path to your icon files")
+	flag.StringVar(&globPattern, "glob", "./**/*.appiconset", "Glob pattern to icon PNGs.")
 }
 
 func main() {
@@ -67,12 +68,12 @@ func main() {
 }
 
 func findImages() []string {
-	path := filepath.Join(assetPath, "*.png")
-	path = filepath.Clean(path)
-	images, err := filepath.Glob(path)
-	exitIf("could not find images", err)
+	pattern := filepath.Join(globPattern, "*.png")
+	pattern = filepath.Clean(pattern)
+	images, err := doublestar.Glob(pattern)
+	exitIf("glob pattern failed", err)
 	if len(images) == 0 {
-		log.Fatalf(`could not find any PNGs in path "%s"`, path)
+		log.Fatalf(`could not find any PNGs for pattern "%s"`, pattern)
 	}
 
 	return images
