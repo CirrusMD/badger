@@ -61,8 +61,12 @@ func main() {
 		exitIf("could not open file", err)
 		parent := gg.NewContextForImage(img)
 
-		drawTopText(parent, mversion, "#555555", 0)
-		drawTopText(parent, buildNum, "f48041", parent.Width()/2)
+		if mversion != "" {
+			drawTopText(parent, mversion, "#555555", 0)
+		}
+		if buildNum != "" {
+			drawTopText(parent, buildNum, "f48041", parent.Width()/2)
+		}
 		overlayBadgeImage(parent)
 
 		err = gg.SavePNG(imgPath, parent.Image())
@@ -82,43 +86,10 @@ func findImages() []string {
 	return images
 }
 
-//func drawMarketingVersion(parent *gg.Context) {
-//	temp := gg.NewContext(50, 100)
-//	temp.SetFontFace(inconsolata.Bold8x16)
-//	sw, sh := temp.MeasureString(mversion)
-//
-//	vc := gg.NewContext(int(math.Ceil(sw)), int(math.Ceil(sh)))
-//	vc.SetHexColor("#555555")
-//	vc.Clear()
-//
-//	temp.SetFontFace(inconsolata.Bold8x16)
-//	vc.SetRGB(1, 1, 1)
-//	vc.DrawStringAnchored(mversion, float64(sw/2), float64(sh/2), 0.5, 0.5)
-//
-//	img := vc.Image()
-//	w, h := versionDimensions(parent)
-//	img = resize.Resize(uint(w), uint(h), img, resize.NearestNeighbor)
-//
-//	parent.DrawImage(img, 0, 0)
-//}
-
-//func drawBuildNumber(parent *gg.Context) {
-//	w, h := versionDimensions(parent)
-//	vc := gg.NewContext(w, h)
-//	vc.SetHexColor("#f48041")
-//	vc.Clear()
-//
-//	vc.SetFontFace(basicfont.Face7x13)
-//	vc.SetRGB(1, 1, 1)
-//	vc.DrawStringAnchored(buildNum, float64(w/2), float64(h/2), 0.5, 0.5)
-//
-//	parent.DrawImage(vc.Image(), parent.Width()/2, 0)
-//}
-
 func drawTopText(parent *gg.Context, text string, hexColor string, x int) {
 	temp := gg.NewContext(50, 100)
 	temp.SetFontFace(inconsolata.Bold8x16)
-	sw, sh := temp.MeasureString(mversion)
+	sw, sh := temp.MeasureString(text)
 
 	vc := gg.NewContext(int(math.Ceil(sw)), int(math.Ceil(sh)))
 	vc.SetHexColor(hexColor)
