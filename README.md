@@ -1,6 +1,10 @@
 # Badger
 
-A command line utility that adds a badge to your tvOS/iOS/Android app icon. It's inspired by the Ruby gem [Badge](https://github.com/HazAT/badge) by Daniel Griesser. 
+[![Build Status](https://travis-ci.org/CirrusMD/badger.svg?branch=master)](https://travis-ci.org/CirrusMD/badger)
+
+A command line utility that adds a badge to your tvOS/iOS/Android app icon. Inspired by the Ruby gem [Badge](https://github.com/HazAT/badge) by Daniel Griesser. 
+
+#### Example Badge:  
 
 ![alt](./example_icon.png)
 
@@ -10,14 +14,41 @@ The current API is not as flexible as the badge gem. Updates forthcoming.
 
 To see a list of command line options run `badger -h` or `badger -help`
 
+## Usage
+
 **Warning**: *Badger modifies your icon PNGs in place.*
+
+Options:
+```
+badger -h      // print help
+badger -help   // print help
+badger version // print current badger version
+```
+
+Flags:
+```
+  -alpha
+    	Show alpha label image in lower right corner
+  -b string
+    	Build number
+  -beta
+    	Show beta label image in lower right corner
+  -dark
+    	Show dark beta/alpha image in lower right corner. Default is a light image.
+  -glob string
+    	Glob pattern to icon PNGs. (default "./**/*.appiconset")
+  -mversion string
+    	Marketing version (ex: 1.3.4)
+```
 
 ## Installation
 
-(Recommended): Download the latest release for your OS from [Releases](https://github.com/CirrusMD/badger/releases)
+### (Recommended):
+
+Download the latest release for your OS from [Releases](https://github.com/CirrusMD/badger/releases)
 
 
-From source:
+### From source:
 ```
 go get github.com/CirrusMD/badger
 cd $GOPATH/src/github.com/CirrusMD/badger
@@ -25,6 +56,4 @@ go build
 ```
 
 ## TODO
-* Add to travis-ci
-* Automated releases via travis-ci
-* Add to homebrew to make CI Fastlane workflows easier. (At CirrusMD, our Fastlane scripts are currently only run on a developer's local machine.)
+* Easy way to add badger to CI (at CirrusMD, we currently only deploy betas locally).
