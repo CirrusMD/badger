@@ -12,14 +12,16 @@ import (
 
 	"path/filepath"
 
+	"math"
+
 	"github.com/CirrusMD/badger/internal"
-	"github.com/nfnt/resize"
-	"golang.org/x/image/font/basicfont"
-	gg "gopkg.in/fogleman/gg.v1"
 	"github.com/bmatcuk/doublestar"
+	"github.com/nfnt/resize"
+	"golang.org/x/image/font/inconsolata"
+	gg "gopkg.in/fogleman/gg.v1"
 )
 
-const Version = "0.1.1"
+const Version = "0.2.0"
 
 var (
 	mversion string
@@ -58,8 +60,9 @@ func main() {
 		img, err := gg.LoadImage(imgPath)
 		exitIf("could not open file", err)
 		parent := gg.NewContextForImage(img)
-		drawMarketingVersion(parent)
-		drawBuildNumber(parent)
+
+		drawTopText(parent, mversion, "#555555", 0)
+		drawTopText(parent, buildNum, "f48041", parent.Width()/2)
 		overlayBadgeImage(parent)
 
 		err = gg.SavePNG(imgPath, parent.Image())
@@ -79,30 +82,57 @@ func findImages() []string {
 	return images
 }
 
-func drawMarketingVersion(parent *gg.Context) {
-	w, h := versionDimensions(parent)
-	vc := gg.NewContext(w, h)
-	vc.SetHexColor("#555555")
+//func drawMarketingVersion(parent *gg.Context) {
+//	temp := gg.NewContext(50, 100)
+//	temp.SetFontFace(inconsolata.Bold8x16)
+//	sw, sh := temp.MeasureString(mversion)
+//
+//	vc := gg.NewContext(int(math.Ceil(sw)), int(math.Ceil(sh)))
+//	vc.SetHexColor("#555555")
+//	vc.Clear()
+//
+//	temp.SetFontFace(inconsolata.Bold8x16)
+//	vc.SetRGB(1, 1, 1)
+//	vc.DrawStringAnchored(mversion, float64(sw/2), float64(sh/2), 0.5, 0.5)
+//
+//	img := vc.Image()
+//	w, h := versionDimensions(parent)
+//	img = resize.Resize(uint(w), uint(h), img, resize.NearestNeighbor)
+//
+//	parent.DrawImage(img, 0, 0)
+//}
+
+//func drawBuildNumber(parent *gg.Context) {
+//	w, h := versionDimensions(parent)
+//	vc := gg.NewContext(w, h)
+//	vc.SetHexColor("#f48041")
+//	vc.Clear()
+//
+//	vc.SetFontFace(basicfont.Face7x13)
+//	vc.SetRGB(1, 1, 1)
+//	vc.DrawStringAnchored(buildNum, float64(w/2), float64(h/2), 0.5, 0.5)
+//
+//	parent.DrawImage(vc.Image(), parent.Width()/2, 0)
+//}
+
+func drawTopText(parent *gg.Context, text string, hexColor string, x int) {
+	temp := gg.NewContext(50, 100)
+	temp.SetFontFace(inconsolata.Bold8x16)
+	sw, sh := temp.MeasureString(mversion)
+
+	vc := gg.NewContext(int(math.Ceil(sw)), int(math.Ceil(sh)))
+	vc.SetHexColor(hexColor)
 	vc.Clear()
 
-	vc.SetFontFace(basicfont.Face7x13)
+	temp.SetFontFace(inconsolata.Bold8x16)
 	vc.SetRGB(1, 1, 1)
-	vc.DrawStringAnchored(mversion, float64(w/2), float64(h/2), 0.5, 0.5)
+	vc.DrawStringAnchored(text, sw/2, sh/2, 0.5, 0.5)
 
-	parent.DrawImage(vc.Image(), 0, 0)
-}
-
-func drawBuildNumber(parent *gg.Context) {
+	img := vc.Image()
 	w, h := versionDimensions(parent)
-	vc := gg.NewContext(w, h)
-	vc.SetHexColor("#f48041")
-	vc.Clear()
+	img = resize.Resize(uint(w), uint(h), img, resize.NearestNeighbor)
 
-	vc.SetFontFace(basicfont.Face7x13)
-	vc.SetRGB(1, 1, 1)
-	vc.DrawStringAnchored(buildNum, float64(w/2), float64(h/2), 0.5, 0.5)
-
-	parent.DrawImage(vc.Image(), parent.Width()/2, 0)
+	parent.DrawImage(img, x, 0)
 }
 
 func versionDimensions(dc *gg.Context) (int, int) {
