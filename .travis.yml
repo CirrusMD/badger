@@ -1,0 +1,24 @@
+language: go
+sudo: false
+go:
+- 1.8.x
+install:
+- make release
+script:
+- diff -u <(echo -n) <(gofmt -d .)
+- go vet $(go list ./... | grep -v /vendor/)
+notifications:
+  email: false
+  slack: cirrusmd:8RGgVLjr0jIDjzPQ6tkOuKKy
+deploy:
+  provider: releases
+  api_key:
+    secure: Q4C4jV5Sbt2Bmv/UCH7va6y/bcenGhm13cXBIkinfFkbkbw2uyOw6FD5bsFCW3tKgvhcPENEE4PyuQFTHR0U8JyJnYbqzpEYYwtUpASo3aBAslF/pRY7ZNoeo1/N/EC5IFhVb8V0fAmSQHrpXMiW4XCIOGajm3H8bm/BZ60n9u7oMGxg7pkRY0pDFz3B0wnb7mSa6ZmjBFqW+F2nKCM23lQOlHyAYhz985kyGLf3hvjfCO838weLXmIw77RKRWU8lPFB6+KqLpGJcwxkHlAfC9cjEv6VComy8YAN8tWyTQR7ETfoYxVbHqyf01ued3aoZFHetS8yqJnBnwSiUAjFGyPK+mC32JP+3+Z9qmosplryiftj6i5Y+1FuKxS8gjaxmXUP1gZBVTxWxzZRzpSnBeiyvEKjvHXUtdejKJSNguacua7RYWTC7432hS7eHC99TZi9a9da1NxDc4c3ogAZtGVJmh1gbhL3ICTHymGBYamoXsH3U62lF856knFxXRK4EH/T8wX8C0oOdVvPxuAcOHbfHL+gqg3dLDQCZ59dvsRkfoJt5bKvxf8+vWqF5mNnrPYtxnd5nu1uBOAD8iKSWaNhQIhXFZ6UlfM3pQyh2Hx91vNggRdvbrYd7UWnGzLpNAUeA7V31/2Xr5snp5EedUasCQy94Pq1Eq+UeJi0GtQ=
+  file:
+    - release/badger-macOS.zip
+    - release/badger-linux.zip
+    - release/badger-windows.zip
+  on:
+    repo: CirrusMD/badger
+    branch: master
+    tags: true
