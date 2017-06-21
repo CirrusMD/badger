@@ -57,5 +57,20 @@ cd $GOPATH/src/github.com/CirrusMD/badger
 go build
 ```
 
-## TODO
-* Easy way to add badger to CI (at CirrusMD, we currently only deploy betas locally).
+### Using on CI
+
+This bash one-liner will download the latest release and extract the executable to the current directory.
+```
+# Replace <your os> with either of these options macOS|linux|windows
+curl -s -L $(curl -s https://api.github.com/repos/CirrusMD/badger/releases | grep browser_download_url | grep <your os> | head -n 1 | cut -d '"' -f 4) > badger.zip && unzip -o badger.zip
+
+```
+
+#### As Part of Fastlane
+Here's an example to include badger in your fastlane scripts
+```ruby
+# Ruby
+os = RbConfig::CONFIG['host_os'] =~ /darwin/ ? 'macOS' : 'linux'
+`curl -s -L $(curl -s https://api.github.com/repos/CirrusMD/badger/releases | grep browser_download_url | grep #{os} | head -n 1 | cut -d '"' -f 4) > badger.zip && unzip -o badger.zip`
+`./badger -beta`
+```
