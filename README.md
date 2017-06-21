@@ -10,7 +10,7 @@ A command line utility that adds a badge to your tvOS/iOS/Android app icon. Insp
 ![alt](./examples/CirrusMD-Images.xcassets/AppIcon.appiconset/icon-120.png)
 ![alt](./examples/CirrusMD-Images.xcassets/AppIcon.appiconset/icon-180.png)
 
-Unlike the ruby gem, Badger has zero dependencies (i.e. bye bye ImageMagick). Badger doesn't require a network connection either.
+Unlike the Ruby gem, Badger has zero dependencies other than itself. Badger does not require a network connection, ImageMagick, or any sort of Ruby environment. It's a standalone executable available for macOS, linux, and windows.
 
 The current API is not as flexible as the badge gem. Updates forthcoming.
 
