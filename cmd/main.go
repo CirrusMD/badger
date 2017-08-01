@@ -5,6 +5,8 @@ import (
 	"log"
 	"strings"
 
+	"os"
+
 	"github.com/CirrusMD/badger"
 )
 
@@ -42,6 +44,7 @@ func main() {
 		Alpha:            alpha,
 		Dark:             dark,
 		Glob:             globPattern,
+		Logger:           os.Stdout,
 	}
 	err := badger.Badge(opts)
 	if err != nil {

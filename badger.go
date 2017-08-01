@@ -1,8 +1,6 @@
 package badger
 
 import (
-	"log"
-
 	"image"
 
 	"bytes"
@@ -12,6 +10,10 @@ import (
 	"math"
 
 	"fmt"
+
+	"io"
+
+	"io/ioutil"
 
 	"github.com/CirrusMD/badger/internal"
 	"github.com/bmatcuk/doublestar"
@@ -35,6 +37,8 @@ type Options struct {
 
 	// Glob pattern (default is ./**/*.appiconset)
 	Glob string
+
+	Logger io.Writer
 }
 
 func (o Options) isBeta() bool {
@@ -50,7 +54,7 @@ func Badge(opts Options) error {
 	}
 
 	for _, imgPath := range images {
-		log.Printf("Badging %s...", imgPath)
+		fmt.Fprintf(opts.Logger, "Badging %s...", imgPath)
 		img, err := gg.LoadImage(imgPath)
 		if err != nil {
 			return fmt.Errorf("could not open file: %v", err)
@@ -77,6 +81,9 @@ func Badge(opts Options) error {
 func validOptions(opts Options) Options {
 	if opts.Glob == "" {
 		opts.Glob = "./**/*.appiconset"
+	}
+	if opts.Logger == nil {
+		opts.Logger = ioutil.Discard
 	}
 	return opts
 }
