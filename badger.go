@@ -54,7 +54,7 @@ func Badge(opts Options) error {
 	}
 
 	for _, imgPath := range images {
-		fmt.Fprintf(opts.Logger, "Badging %s...", imgPath)
+		fmt.Fprintf(opts.Logger, "Badging %s...\n", imgPath)
 		img, err := gg.LoadImage(imgPath)
 		if err != nil {
 			return fmt.Errorf("could not open file: %v", err)
