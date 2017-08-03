@@ -22,7 +22,7 @@ import (
 	gg "gopkg.in/fogleman/gg.v1"
 )
 
-const Version = "0.3.0"
+const Version = "0.3.2"
 
 type Options struct {
 	// Semantic version, example: 3.0.1
